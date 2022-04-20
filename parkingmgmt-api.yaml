@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: parkingmgmt-api
+  name: parkingmgmt-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: parkingmgmt-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: parkingmgmt-api
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: sezg583-assignment-parkingmgmt
+          name: sezg583-assignment-parkingmgmt
+          env:
+            - name: SOCIETY_SERVICE_HOSTNAME
+              value: societymgmt-api-service.default
+          ports:
+            - containerPort: 9093
+          resources: {}
+          imagePullPolicy: Never
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: parkingmgmt-api-service
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: parkingmgmt-api
+  ports:
+    - port: 9093
+      targetPort: 9093
+      nodePort: 30003
